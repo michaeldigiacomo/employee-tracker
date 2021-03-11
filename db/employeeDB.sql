@@ -1,5 +1,5 @@
 DROP DATABASE IF EXISTS employeeDB;
-CREATE DATABASE employeDB;
+CREATE DATABASE employeeDB;
 
 USE employeeDB;
 
@@ -9,13 +9,14 @@ CREATE TABLE department (
 );
 
 CREATE TABLE role (
-    department_id INT UNSIGNED NOT NULL,
+    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     INDEX dep_id (department_id), 
     -- foreign key refereces cascade
-    FOREIGN KEY (department_id) REFERNCES department(department_id)
+    -- FOREIGN KEY (department_id) REFERNCES department(department_id)
 
     title VARCHAR(30),
     salary INT UNSIGNED NOT NULL,
+    department_id INT UNSIGNED NOT NULL,
 
 );
 
@@ -33,5 +34,3 @@ CREATE TABLE employee (
     -- manager id references role_id
 
 );
-
-INSERT INTO department (name)
