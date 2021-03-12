@@ -25,7 +25,7 @@ function askQuestions() {
         choices: ["view roles", "view departments"],
       },
       {
-        name: "userTwoChoice",
+        name: "employeeName",
         message: "What is the employees first name?",
         type: "list",
         choices: ["Michael", "David"],
