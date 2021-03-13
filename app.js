@@ -39,10 +39,10 @@ function askQuestions() {
       }
     })
     .then((res) => {
-      if (res.userTwoChoice === "Michael") {
-        viewRoles();
-      } else if (res.userTwoChoice === "David") {
-        viewDepartments();
+      if (res.employeeName === "Michael") {
+        viewEmployees();
+      } else if (res.employeeName === "David") {
+        viewEmployees();
       }
     });
 }
@@ -57,6 +57,14 @@ function viewRoles() {
 
 function viewDepartments() {
   connection.query("select * from department", function (err, res) {
+    if (err) throw err;
+    console.table(res);
+    askQuestions();
+  });
+}
+
+function viewEmployees() {
+  connection.query("select * from employee", function (err, res) {
     if (err) throw err;
     console.table(res);
     askQuestions();
