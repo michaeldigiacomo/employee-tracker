@@ -24,41 +24,33 @@ function askQuestions() {
         name: "userChoice",
         message: "What would you like to do?",
         type: "list",
-        choices: ["view roles", "view departments", "view employees", "add roles", "add departments", "add employees", "update employee role"],
-      },
-      {
-        name: "employeeFirst",
-        message: "What is the employees first name?",
-        type: "input",
-      },
-      {
-        name: "employeeLast",
-        message: "What is the employees Last name?",
-        type: "input",
+        choices: [
+          "view roles",
+          "view departments",
+          "view employees",
+          "add roles",
+          "add departments",
+          "add employees",
+          "update employee role",
+        ],
       },
     ])
     .then((res) => {
-      if (res.userChoice === "view roles") {
+      let userChoice = res.userChoice;
+      if (userChoice === "view roles") {
         viewRoles();
-      } else if (res.userChoice === "view departments") {
+      } else if (userChoice === "view departments") {
         viewDepartments();
-      } else if (res.userChoice === "view employees") {
+      } else if (userChoice === "view employees") {
         viewEmployees();
-      } else if (res.userChoice === "add roles") {
+      } else if (userChoice === "add roles") {
         addRoles();
-      } else if (res.userChoice === "add departments") {
+      } else if (userChoice === "add departments") {
         addDepartments();
-      } else if (res.userChoice === "add employees") {
+      } else if (userChoice === "add employees") {
         addEmployees();
-      } else if (res.userChoice === "update employee role") {
+      } else {
         updateEmployeeRole();
-      }
-    })
-    .then((res) => {
-      if (res.employeeFirst === "Michael") {
-        viewEmployees();
-      } else if (res.employeeFirst === "David") {
-        viewEmployees();
       }
     });
 }
@@ -74,23 +66,73 @@ function viewRoles() {
 function viewDepartments() {
   connection.query("select * from department", function (err, res) {
     if (err) throw err;
+    console.log("\n")
     console.table(res);
     askQuestions();
   });
 }
 
-function viewEmployees() {
-  connection.query("select * from employee", function (err, res) {
-    if (err) throw err;
-    console.table(res);
-    askQuestions();
-  });
+function addDepartments() {
+  inquirer.prompt ([
+    {
+      name: "departmentName",
+      message: "What is the name of the department you would like to add?",
+      type: "input",
+    }
+  ]) .then(res => {
+    // console.log(res.departmentName);
+    connection.query("insert into department set ?",{name: res.departmentName}, function (err, res) {
+      if (err) throw err;
+      // if (err) console.log("An error occured")
+      viewDepartments();
+      askQuestions();
+    });
+  })
 }
 
-function addRoles() {
-  connection.query("select * from role", function (err, res) {
-    if (err) throw err;
-    console.table(res);
-    askQuestions();
-  });
+function addEmployees() {
+  inquirer.prompt ([
+    {
+      name: "firstName",
+      message: "What is the first name of the employee?",
+      type: "input",
+    },
+    {
+      name: "lastName",
+      message: "What is the last name of the employee?",
+      type: "input",
+    },
+    {
+      name: "roleId",
+      message: "What is the role ID of the employee?",
+      type: "input",
+    },
+    {
+      name: "managerId",
+      message: "What is the manager ID of the employee?",
+      type: "input",
+    }
+  ]) .then(res => {
+    // console.log(res.departmentName);
+    connection.query("insert into employee set ?",[
+      {
+        first_name: res.firstName
+      },
+      {
+        last_name: res.lastName
+      },
+      {
+        role_id: res.roleId
+      },
+      {
+        manager_id: res.managerId
+      }
+    ], function (err, res) {
+      if (err) throw err;
+      // if (err) console.log("An error occured")
+      // viewEmployees();
+      console.table(res)
+      askQuestions();
+    });
+  })
 }
