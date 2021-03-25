@@ -72,6 +72,36 @@ function viewDepartments() {
   });
 }
 
+function viewEmployees() {
+  connection.query("select * from employee", function (err, res) {
+    if (err) throw err;
+    console.table(res);
+    askQuestions();
+  });
+}
+
+function addRoles() {
+  inquirer.prompt ([
+    {
+      name: "roleName",
+      message: "What is the name of the role you would like to add?",
+      type: "input",
+    }
+  ]) .then(res => {
+    connection.query("insert into role set ?",{title: res.title}, function (err, res) {
+      if (err) throw err;
+    });
+    connection.query("insert into role set ?",{salary: res.salary}, function (err, res) {
+      if (err) throw err;
+    });
+    connection.query("insert into role set ?",{department_id: res.department_id}, function (err, res) {
+      if (err) throw err;
+      viewRoles();
+      askQuestions();
+    });
+  })
+}
+
 function addDepartments() {
   inquirer.prompt ([
     {
@@ -80,10 +110,8 @@ function addDepartments() {
       type: "input",
     }
   ]) .then(res => {
-    // console.log(res.departmentName);
     connection.query("insert into department set ?",{name: res.departmentName}, function (err, res) {
       if (err) throw err;
-      // if (err) console.log("An error occured")
       viewDepartments();
       askQuestions();
     });
@@ -129,9 +157,23 @@ function addEmployees() {
       }
     ], function (err, res) {
       if (err) throw err;
-      // if (err) console.log("An error occured")
-      // viewEmployees();
       console.table(res)
+      askQuestions();
+    });
+  })
+}
+
+function updateEmployeeRole() {
+  inquirer.prompt ([
+    {
+      name: "departmentName",
+      message: "What is the name of the department you would like to update?",
+      type: "input",
+    }
+  ]) .then(res => {
+    connection.query("update department set ?",{name: res.departmentName}, function (err, res) {
+      if (err) throw err;
+      viewDepartments();
       askQuestions();
     });
   })

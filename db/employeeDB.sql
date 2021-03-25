@@ -15,7 +15,7 @@ CREATE TABLE role (
     -- FOREIGN KEY (department_id) REFERNCES department(department_id)
 
     title VARCHAR(30),
-    salary INT UNSIGNED NOT NULL,
+    salary INT UNSIGNED NULL,
     department_id INT UNSIGNED NOT NULL,
 
 );
