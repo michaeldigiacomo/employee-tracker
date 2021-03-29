@@ -83,24 +83,28 @@ function viewEmployees() {
 function addRoles() {
   inquirer.prompt ([
     {
-      name: "roleName",
+      name: "title",
       message: "What is the name of the role you would like to add?",
       type: "input",
-    }
+    },
+    {
+      name: "salary",
+      message: "What is the salary of the role?",
+      type: "input",
+    },
+    {
+      name: "department_id",
+      message: "What is the department ID of the role?",
+      type: "input",
+    },
   ]) .then(res => {
-    connection.query("insert into role set ?",{title: res.title}, function (err, res) {
-      if (err) throw err;
-    });
-    connection.query("insert into role set ?",{salary: res.salary}, function (err, res) {
-      if (err) throw err;
-    });
-    connection.query("insert into role set ?",{department_id: res.department_id}, function (err, res) {
+    connection.query("insert into role set ?",{title: res.title, salary: res.salary, department_id: res.department_id}, function (err, res) {
       if (err) throw err;
       viewRoles();
       askQuestions();
     });
-  })
-}
+    });
+  }
 
 function addDepartments() {
   inquirer.prompt ([
@@ -166,14 +170,19 @@ function addEmployees() {
 function updateEmployeeRole() {
   inquirer.prompt ([
     {
-      name: "departmentName",
-      message: "What is the name of the department you would like to update?",
+      name: "id",
+      message: "What is the ID of the role you would like to update?",
+      type: "input",
+    },
+    {
+      name: "title",
+      message: "What is the new title of this role?",
       type: "input",
     }
   ]) .then(res => {
-    connection.query("update department set ?",{name: res.departmentName}, function (err, res) {
+    connection.query("update role set ? where ?",[{title: res.title},{id: res.id}], function (err, res) {
       if (err) throw err;
-      viewDepartments();
+      viewRoles();
       askQuestions();
     });
   })
